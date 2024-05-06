@@ -2,6 +2,7 @@ const User = require("../model/userMOdel");
 const bcrypt = require("bcrypt");
 const nodemailer = require("nodemailer");
 const otpGenerator = require("otp-generator");
+const jwt = require("jsonwebtoken");
 
 let registrationController = async (req, res) => {
   const { name, email, password } = req.body;
@@ -25,30 +26,29 @@ let registrationController = async (req, res) => {
       upperCaseAlphabets: false,
       specialChars: false,
     });
-    console.log(otp);
+
     bcrypt.hash(password, 10, async function (err, hash) {
       let user = new User({
         name: name,
         email: email,
         password: hash,
-        otp:otp
+        otp: otp,
       });
-
       user.save();
-
-      const transporter = nodemailer.createTransport({
-        service: "gmail",
-        auth: {
-          user: "shawon.cit.bd@gmail.com",
-          pass: "nivv mfis ocml hgky",
-        },
-      });
-
-      const info = await transporter.sendMail({
-        from: `"MERINIAN"`, // sender address
-        to: email, // list of receivers
-        subject: "This is Your Verification", // Subject line
-        html: `Here is your <b>OTP:</b>${otp}`, // html body
+      jwt.sign({ email: email }, "shhhhh", async function (err, token) {
+        const transporter = nodemailer.createTransport({
+          service: "gmail",
+          auth: {
+            user: "shawon.cit.bd@gmail.com",
+            pass: "nivv mfis ocml hgky",
+          },
+        });
+        const info = await transporter.sendMail({
+          from: `"MERINIAN"`,
+          to: email,
+          subject: "This is Your Verification",
+          html: `<a href="http://localhost:5173/emailverification/${token}">Click here</a>`,
+        });
       });
 
       res.send({

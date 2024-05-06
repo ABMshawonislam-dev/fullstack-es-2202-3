@@ -1,35 +1,47 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import React, { useState } from "react";
+import { Button, Checkbox, Form, Input, Alert, Space } from "antd";
+import axios from "axios";
+import {
+  createRoutesFromElements,
+  createBrowserRouter,
+  Route,
+  RouterProvider,
+} from "react-router-dom";
+import Registration from "../pages/Registration";
+import OtpVarifucation from "../pages/OtpVarifucation";
+import Login from "../pages/Login";
+import EmaillVerifyLink from "../pages/EmaillVerifyLink";
+import ForgotPass from "../pages/ForgotPass";
+import NewPassword from "../pages/NewPassword";
+import Dashboard from "../pages/Dashboard";
+import AddCategory from "../pages/AddCategory";
+import AddSubCategory from "../pages/AddSubCategory";
+import ViewCategory from "../pages/ViewCategory";
+import AddProduct from "../pages/AddProduct";
+import ViewProduct from "../pages/ViewProduct";
+
+const router = createBrowserRouter(
+  createRoutesFromElements(
+    <Route>
+      <Route path="/" element={<Registration />} />
+      <Route path="/login" element={<Login />} />
+      <Route path="/forgotpass" element={<ForgotPass />} />
+      <Route path="/newpass/:token" element={<NewPassword />} />
+      <Route path="/emailverification/:token" element={<EmaillVerifyLink />} />
+      <Route path="/otpverification/:email" element={<OtpVarifucation />} />
+      <Route path="/dashboard" element={<Dashboard />}>
+        <Route path="addcategory" element={<AddCategory />} />
+        <Route path="addsubcategory" element={<AddSubCategory />} />
+        <Route path="viewcategory" element={<ViewCategory />} />
+        <Route path="addproduct" element={<AddProduct />} />
+        <Route path="viewproduct" element={<ViewProduct />} />
+      </Route>
+    </Route>
+  )
+);
 
 function App() {
-  const [count, setCount] = useState(0)
-
-  return (
-    <>
-      <div>
-        <a href="https://vitejs.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.jsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
-  )
+  return <RouterProvider router={router} />;
 }
 
-export default App
+export default App;
