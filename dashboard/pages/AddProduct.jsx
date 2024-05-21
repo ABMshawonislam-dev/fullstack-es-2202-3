@@ -2,9 +2,12 @@ import React, { useState } from "react";
 import { Button, Checkbox, Form, Input } from "antd";
 import axios from "axios";
 import { useSelector } from "react-redux";
+import { CKEditor } from "@ckeditor/ckeditor5-react";
+import ClassicEditor from "@ckeditor/ckeditor5-build-classic";
 
 const AddProduct = () => {
   let [image, setimage] = useState({});
+  let [description,setDescription] = useState("")
 
   let userInfo = useSelector((state) => state.user.value);
   const onFinish = async (values) => {
@@ -13,6 +16,7 @@ const AddProduct = () => {
       "http://localhost:8000/api/v1/product/createproduct",
       {
         name: values.name,
+        description: description,
         avatar: image,
       },
       {
@@ -64,6 +68,24 @@ const AddProduct = () => {
         >
           <Input />
         </Form.Item>
+
+        <CKEditor
+          editor={ClassicEditor}
+          data="<p>Shawon</p>"
+          onReady={(editor) => {
+            // You can store the "editor" and use when it is needed.
+            console.log("Editor is ready to use!", editor);
+          }}
+          onChange={(event, editor) => {
+            setDescription(editor.getData());
+          }}
+          onBlur={(event, editor) => {
+            console.log("Blur.", editor);
+          }}
+          onFocus={(event, editor) => {
+            console.log("Focus.", editor);
+          }}
+        />
 
         <Form.Item>
           <input onChange={handleChange} type="file" />

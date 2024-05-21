@@ -11,9 +11,35 @@ const ViewProduct = () => {
       let catdata = [];
 
       data.data.map((item) => {
+        let details = item.description;
+        const oembedRegex = /<oembed[^>]*>/g;
+        const oembedMatch = details?.match(oembedRegex);
+        console.log("asdasd", oembedMatch);
+        if (oembedMatch) {
+          const oembedUrl = oembedMatch[0].match(/url="([^"]*)"/)[1];
+          oembedUrl.replace("watch", "embed");
+          console.log(
+            "asdasdasdasdasd",
+            oembedUrl.split("v=")[1].split("&")[0]
+          );
+          const iframeElement = `<iframe
+          width="400"
+          height="400"
+          src="https://www.youtube.com/embed/${
+            oembedUrl.split("v=")[1].split("&")[0]
+          }"
+          title="Tom &amp; Jerry | Tom &amp; Jerry in Full Screen | Classic Cartoon Compilation | WB Kids"
+          frameborder="0"
+          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+          referrerpolicy="strict-origin-when-cross-origin"
+          allowfullscreen
+        ></iframe>`;
+          details = details?.replace(oembedRegex, iframeElement);
+        }
         catdata.push({
           key: item._id,
           name: item.name,
+          description: details,
           image: item.image,
         });
       });
@@ -28,6 +54,14 @@ const ViewProduct = () => {
       title: "Name",
       dataIndex: "name",
       key: "name",
+    },
+    {
+      title: "Description",
+      dataIndex: "description",
+      key: "description",
+      render: (_, record) => (
+        <div dangerouslySetInnerHTML={{ __html: record.description }}></div>
+      ),
     },
     {
       title: "Image",

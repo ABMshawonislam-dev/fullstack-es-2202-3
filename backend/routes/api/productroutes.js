@@ -4,7 +4,7 @@ const multer = require("multer");
 
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
-    cb(null, "./uploads");
+    cb(null, "./uploads/");
   },
   filename: function (req, file, cb) {
     console.log(file);
@@ -24,10 +24,16 @@ const verifyToken = require("../../middleware/verifyToken");
 const secureApi = require("../../middleware/secureApi");
 const productController = require("../../controllers/productController");
 const allProController = require("../../controllers/allPro");
+const approveCategory = require("../../controllers/approveCategory");
+const deleteCategory = require("../../controllers/deleteCategory");
+const editCategoryController = require("../../controllers/editCat");
 
 route.post("/createcategory", secureApi, verifyToken, addCategoryController);
+route.post("/approvecategory", approveCategory);
 route.post("/createsubcategory", addSubCategoryController);
 route.post("/createproduct", upload.single("avatar"), productController);
+route.post("/editcat", editCategoryController);
+route.delete("/deletecategory/:id", deleteCategory);
 
 route.get("/allcat", viewCategoryController);
 route.get("/allsubcat", viewSubCategoryController);
